@@ -1,0 +1,49 @@
+﻿
+var PORT = 33333;
+var LOCAL_HOST = '127.0.0.1';
+//var HOST = '10.210.35.142';
+var HOST = '192.168.15.3';
+
+var dgram = require('dgram');
+var server = dgram.createSocket('udp4');
+
+var fs = require("fs");
+var wstream = fs.createWriteStream('test.png');
+
+var clientsIpArray = ['10.210.38.17', '10.210.38.39'];
+
+wstream.on('finish', function () {
+    console.log('file has been written');
+});
+
+//Server setup completed!
+server.on('listening', function () { 
+    var address = server.address();
+    console.log('UDP Server listening on ' + address.address + ":" + address.port);
+});
+
+//UDP Message received function
+server.on('message', function (message, remote) {
+    console.log(remote.address + ':' + remote.port + ' - ' + message);
+
+    var replyMessage = message;
+
+    var client = dgram.createSocket('udp4');
+
+    sourceIp = remote.address;
+    //destinationIp = (sourceIp == clientsIpArray[0] ? clientsIpArray[1] : clientsIpArray[0]);
+    destinationIp = remote.address;
+
+    client.send(replyMessage, 0, replyMessage.length, 41915/*remote.port*/, destinationIp, function (err, bytes) {
+        if (err) throw err;
+        console.log('UDP message sent to ' + destinationIp + ':' + '41915');
+        client.close();
+    });
+
+    //wstream.write(message);
+    //wstream.end();
+});
+
+server.bind(PORT, HOST);
+
+

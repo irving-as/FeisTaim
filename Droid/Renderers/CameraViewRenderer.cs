@@ -24,6 +24,9 @@ namespace FeisTaim.Droid.Renderers
         Android.Hardware.Camera camera;
         TextureView liveCameraStream;
 
+        private const int _imageWidth = 176;
+        private const int _imageHeight = 144;
+
         public CameraViewRenderer()
         {
         }
@@ -138,6 +141,7 @@ namespace FeisTaim.Droid.Renderers
         public bool OnSurfaceTextureDestroyed(SurfaceTexture surface)
         {
             camera.StopPreview();
+            camera.SetPreviewCallback(null);
             camera.Release();
 
             return true;
@@ -160,9 +164,9 @@ namespace FeisTaim.Droid.Renderers
         public void OnPreviewFrame(byte[] data, Android.Hardware.Camera camera)
         {
             var outputStream = new MemoryStream();
-            YuvImage yuvImage = new YuvImage(data, ImageFormat.Nv21, 176, 144, null);
+            YuvImage yuvImage = new YuvImage(data, ImageFormat.Nv21, _imageWidth, _imageHeight, null);
 
-            yuvImage.CompressToJpeg(new Rect(0, 0, 176, 144), 50, outputStream);
+            yuvImage.CompressToJpeg(new Rect(0, 0, _imageWidth, _imageHeight), 50, outputStream);
 
             byte[] imageBytes = outputStream.ToArray();
 
