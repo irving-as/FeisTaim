@@ -8,7 +8,8 @@ namespace FeisTaim
         {
             InitializeComponent();
 
-            MainPage = new FeisTaimPage();
+            //MainPage = new NavigationPage(new FeisTaimPage());
+            MainPage = new NavigationPage(new MainPage());
         }
 
         protected override void OnStart()

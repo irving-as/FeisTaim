@@ -5,9 +5,15 @@ namespace FeisTaim
 {
     public partial class FeisTaimPage : ContentPage
     {
-        public FeisTaimPage()
+
+        private string _host;
+        private int _port;
+
+        public FeisTaimPage(string host, int port)
         {
             InitializeComponent();
+            _host = host;
+            _port = port;
         }
 
         protected async override void OnAppearing()
@@ -15,6 +21,8 @@ namespace FeisTaim
             base.OnAppearing();
             if (await cameraView.RequestCameraPermissionTask)
             {
+                cameraView.IpAddress = _host;
+                cameraView.Port = _port;
                 cameraView.StartSession();
             }
             else

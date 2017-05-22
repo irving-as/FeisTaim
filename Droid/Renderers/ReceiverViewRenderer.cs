@@ -82,9 +82,9 @@ namespace FeisTaim.Droid.Renderers
             Bitmap image = BitmapFactory.DecodeByteArray(data, 0, data.Length);
             image = Bitmap.CreateBitmap(image, 0, 0, image.Width, image.Height, matrix, true);
 
-            ((MainActivity)Context).RunOnUiThread(() =>
+            ((MainActivity)Context)?.RunOnUiThread(() =>
             {
-                _streamImage.SetImageBitmap(image);
+                _streamImage?.SetImageBitmap(image);
             });
         }
     }

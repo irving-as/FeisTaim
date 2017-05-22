@@ -12,8 +12,8 @@ namespace FeisTaim.Controls
         TimeSpan _timeSpan;
         readonly double _fps = 20;
         UdpSocketClient _client;
-        int _port = 33333;
-        string _address = "10.210.35.142";
+        public int Port { get; set; }
+        public string IpAddress { get; set; }
 
         public event EventHandler<PreviewEventArgs> PreviewReady;
 
@@ -45,7 +45,14 @@ namespace FeisTaim.Controls
         {
             if (DateTime.Now.Subtract(_lastSent) > TimeSpan.FromSeconds(1 / _fps))
             {
-                await _client.SendToAsync(args.Data, _address, _port);
+                try
+                {
+                    await _client.SendToAsync(args.Data, IpAddress, Port);
+                }
+                catch (Exception ex)
+                {
+                    
+                }
             }
         }
     }
